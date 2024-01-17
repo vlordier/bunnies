@@ -2,7 +2,7 @@
 ## Let glittery pink bunnies to amazing work
 
 <div align="center">
-  <img src="assets/bunnies.png" alt="Bunnies Image" width="300" height="300">
+  <img src="assets/bunnies.png" alt="Bunnies Image" width="400" height="400">
 </div>
 
 ## Install Aider from git

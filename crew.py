@@ -2,8 +2,6 @@ import logging
 
 import yaml
 from crewai import Agent, Task, Crew, Process
-from langchain.agents import Tool
-from langchain.utilities import GoogleSerperAPIWrapper
 from tools import code_interpreter_tool, google_search_tool
 
 
@@ -26,9 +24,7 @@ for data in agents_data["agents"]:
     var_name = "agent_" + data["role"].replace(" ", "_").lower()
     # Create the Agent and assign it to the new variable
     agents_list.append(
-        {
-            "agent_name": var_name,
-            "agent": Agent(
+        Agent(
                 role=data["role"],
                 goal=data["goal"],
                 backstory=data["backstory"],
@@ -36,17 +32,8 @@ for data in agents_data["agents"]:
                 allow_delegation=True,
                 tools=tools,
             ),
-        }
     )
-    # globals()[var_name] = Agent(
-    #     role=data["role"],
-    #     goal=data["goal"],
-    #     backstory=data["backstory"],
-    #     verbose=True,
-    #     allow_delegation=True,
-    #     tools=[google_search_tool],
-    # )
-    logger.info(f"Created {var_name}")
+    logger.info(f"Created agent with role: {data['role']}")
 
 
 logger.info(f"Loaded {len(agents_list)} agents.")
@@ -57,9 +44,12 @@ with open(tasks_yaml_file) as file:
     tasks_data = yaml.safe_load(file)
     for data in tasks_data["tasks"]:
         # find in agents_list the agent with the same name as the task in agent_name
-        agent = next(
-            item for item in agents_list if item["agent_name"] == data["agent_name"]
-        )  
+        for agent in agents_list:
+            if agent.role == data["agent_name"]:
+                agent = globals()[data["agent_name"]]
+                # data["agent"] = agent
+        print(agent)
+        # agent = next(agent for agent in agents_list if agent.role == data["agent_name"])
         tasks_list.append(Task(description=data["task"], agent=agent))
 
 
@@ -72,6 +62,9 @@ crew = Crew(
 
 logger.info(f"Created Crew with {len(crew.agents)} agents and {len(crew.tasks)} tasks.")
 # Kickoff the crew
-logging.info("Starting Crew execution")
-result = crew.kickoff()
-logger.info(f"Result of Crew execution: {result}")
+logger.info("Starting Crew execution")
+try:
+    result = crew.kickoff()
+    logger.info(f"Result of Crew execution: {result}")
+except Exception as e:
+    logger.error(f"Crew execution failed with error: {e}")
