@@ -1,3 +1,5 @@
+import logging
+
 from langchain.agents import Tool
 from langchain.utilities import GoogleSerperAPIWrapper  # Example tool for web search
 
