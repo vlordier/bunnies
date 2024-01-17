@@ -75,14 +75,18 @@ messages = [
     {"role": "user", "content": prompt_define_tasks},
 ]
 
+logger.info("Sending prompt to OpenAI API...")
 completion = client.chat.completions.create(
     model=model,
     messages=messages,
     max_tokens=4096,
     n=1,
     response_model=TasksList,
-    response_format={"type": "text"},
+    response_format={"type": "json_object"},
     stop=None,
 )
 
-print(completion)
+for task in completion:
+    logger.info(f"Task: {task}")
+    logger.info("")
+
