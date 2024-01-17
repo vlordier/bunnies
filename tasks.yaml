@@ -1,6 +1,6 @@
 tasks:
-  - description: Define a strategy and business plan to replace all or part of the work done by humans with machines by focusing on the gig economy online labor market
-    agent: 
+- description: Define a strategy and business plan to replace all or part of the work done by humans with machines by focusing on the gig economy online labor market
+  agent:
 
-  - description: Analyze gig economy data to identify trends and in-demand skills on Upwork
-    agent: Data Analyst
+- description: Analyze gig economy data to identify trends and in-demand skills on Upwork
+  agent: Data Analyst
