@@ -1,9 +1,9 @@
 import logging
 
 import yaml
-from crewai import Agent, Task, Crew, Process
-from tools import code_interpreter_tool, google_search_tool
+from crewai import Agent, Crew, Process, Task
 
+from tools import code_interpreter_tool, google_search_tool
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -25,13 +25,13 @@ for data in agents_data["agents"]:
     # Create the Agent and assign it to the new variable
     agents_list.append(
         Agent(
-                role=data["role"],
-                goal=data["goal"],
-                backstory=data["backstory"],
-                verbose=True,
-                allow_delegation=True,
-                tools=tools,
-            ),
+            role=data["role"],
+            goal=data["goal"],
+            backstory=data["backstory"],
+            verbose=True,
+            allow_delegation=True,
+            tools=tools,
+        ),
     )
     logger.info(f"Created agent with role: {data['role']}")
 
@@ -43,14 +43,14 @@ tasks_list = []
 with open(tasks_yaml_file) as file:
     tasks_data = yaml.safe_load(file)
     for data in tasks_data["tasks"]:
-        # find in agents_list the agent with the same name as the task in agent_name
+        # find in agents_list the agent with the same name as the task in agent_name
         for agent in agents_list:
             if agent.role == data["agent_name"]:
-                agent = globals()[data["agent_name"]]
-                # data["agent"] = agent
-        print(agent)
-        # agent = next(agent for agent in agents_list if agent.role == data["agent_name"])
-        tasks_list.append(Task(description=data["task"], agent=agent))
+                agent_name = globals()[data["agent_name"]]
+        if agent_name is None:
+            raise ValueError(f"Agent {data['agent_name']} not found")
+        else:
+            tasks_list.append(Task(description=data["task"], agent=agent_name))
 
 
 # Combine agents and tasks into a Crew
