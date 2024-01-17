@@ -46,11 +46,11 @@ with open(tasks_yaml_file) as file:
         # find in agents_list the agent with the same name as the task in agent_name
         for agent in agents_list:
             if agent.role == data["agent_name"]:
-                agent = globals()[data["agent_name"]]
-                # data["agent"] = agent
-        print(agent)
-        # agent = next(agent for agent in agents_list if agent.role == data["agent_name"])
-        tasks_list.append(Task(description=data["task"], agent=agent))
+                agent_name = globals()[data["agent_name"]]
+        if agent_name is None:
+            raise ValueError(f"Agent {data['agent_name']} not found")
+        else:
+            tasks_list.append(Task(description=data["task"], agent=agent_name))
 
 
 # Combine agents and tasks into a Crew
