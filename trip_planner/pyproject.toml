@@ -1,0 +1,27 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+
+[tool.poetry]
+authors = ["Your Name <you@example.com>"]
+description = ""
+name = "trip-planner-crew"
+version = "0.1.0"
+
+[tool.poetry.dependencies]
+crewai = "0.1.24"
+pyowm = '3.3.0'
+python = ">=3.10.0,<3.12"
+python-dotenv = "1.0.0"
+tools = "^0.1.9"
+unstructured = '==0.10.25'
+
+[tool.pyright]
+exclude = [".cache"]
+# https://github.com/microsoft/pyright/blob/main/docs/configuration.md
+useLibraryCodeForTypes = true
+
+[tool.ruff]
+ignore = ['W291', 'W292', 'W293']
+# https://beta.ruff.rs/docs/configuration/
+select = ['E', 'W', 'F', 'I', 'B', 'C4', 'ARG', 'SIM']
