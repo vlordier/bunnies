@@ -1,3 +1,12 @@
+"""
+
+CrewAI runner script
+
+This script is used to run a CrewAI crew. It loads the agents and tasks from YAML files and then creates a Crew object
+which is used to run the crew.
+
+"""
+
 import logging
 
 import yaml
@@ -10,6 +19,45 @@ logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
+
+def get_agents(agents_yaml_file: str) -> list:
+    """
+    Load agents from YAML file
+
+    :param agents_yaml_file: Path to YAML file containing agents
+    :return: List of agents
+    """
+    with open(agents_yaml_file) as file:
+        agents_data = yaml.safe_load(file)
+
+    agents_list = []
+    for data in agents_data["agents"]:
+        # Create a variable name by replacing spaces in the role with underscores and prefixing with 'agent_'
+        var_name = "agent_" + data["role"].replace(" ", "_").lower()
+        # assign the agent to the variable name
+        globals()[var_name] = Agent(
+            role=data["role"],
+            goal=data["goal"],
+            backstory=data["backstory"],
+            verbose=True,
+            allow_delegation=True,
+            tools=tools,
+        )
+
+        # Create the Agent and assign it to the new variable
+        agents_list.append(
+            Agent(
+                role=data["role"],
+                goal=data["goal"],
+                backstory=data["backstory"],
+                verbose=True,
+                allow_delegation=True,
+                tools=tools,
+            ),
+        )
+        logger.info(f"Created agent with role: {data['role']}")
+
+    return agents_list
 
 agent_yaml_file = "agents.yaml"
 
